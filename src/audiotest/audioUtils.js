@@ -10,16 +10,18 @@ function noteToValue(note) {
   return note.octave * 12 + OCTAVE.indexOf(note.pitch);
 }
 
-function valueToNote(value) {
+function valueToNote (value) {
   return {octave: Math.floor(value / 12), pitch: OCTAVE[value % 12]};
 }
 
-function getNoteDistance(note1, note2) {
+function getNoteDistance (note1, note2) {
   return noteToValue(note1) - noteToValue(note2);
 }
 
-function getNearestSample(instrument, note) {
-  let sortedBank = LIBRARY.samples[instrument].slice().sort((sampleA, sampleB) => {
+function getNearestSample (instrument, note) {
+  let sortedBank = LIBRARY.samples[instrument]
+  .slice()
+  .sort((sampleA, sampleB) => {
     let distanceToA = Math.abs(getNoteDistance(note, sampleA));
     let distanceToB = Math.abs(getNoteDistance(note, sampleB));
     return distanceToA - distanceToB;
@@ -27,7 +29,7 @@ function getNearestSample(instrument, note) {
   return sortedBank[0];
 }
 
-function getFullSamplePath(note) {
+function getFullSamplePath (note) {
   if (localSampleLibrary) {
     return note.file;
   } else {
@@ -35,7 +37,7 @@ function getFullSamplePath(note) {
   }
 }
 
-function getOvertone(note,overtone) {
+function getOvertone (note,overtone) {
   const overtoneInterval = Math.round(Math.log(1 * overtone + 1) / Math.log(Math.pow(2,1 / 12)));
   const overtoneValue = noteToValue(note) + overtoneInterval;
   return valueToNote(overtoneValue);
@@ -45,10 +47,12 @@ function getPlaybackRate(noteDistance) {
   return Math.pow(2, noteDistance / 12);
 }
 
-exports.noteToValue = noteToValue;
-exports.valueToNote = valueToNote;
-exports.getNoteDistance = getNoteDistance;
-exports.getNearestSample = getNearestSample;
-exports.getFullSamplePath = getFullSamplePath;
-exports.getOvertone = getOvertone;
-exports.getPlaybackRate = getPlaybackRate;
+module.exports = {
+  noteToValue,
+  valueToNote,
+  getNoteDistance,
+  getNearestSample,
+  getFullSamplePath,
+  getOvertone,
+  getPlaybackRate
+}
